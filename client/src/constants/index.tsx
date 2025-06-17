@@ -1,3 +1,15 @@
+export const FIELD_NAMES = {
+  fullName: "Họ và tên",
+  email: "Email",
+  password: "Mật khẩu",
+};
+
+export const FIELD_TYPES = {
+  fullName: "text",
+  email: "email",
+  password: "password",
+};
+
 export const sampleSutras = [
   {
     id: 1,
