@@ -3,6 +3,7 @@
 import { signIn } from "@/auth";
 import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
+import { sendEmail } from "@/lib/workflow";
 import ratelimit from "@/ratelimit";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
@@ -37,6 +38,12 @@ export const signUp = async (params: AuthCredentials) => {
       fullName,
       email,
       password: hashedPassword,
+    });
+
+    await sendEmail({
+      email,
+      subject: "Welcome to the platform",
+      message: `Welcome ${fullName}, thank you for joining Chánh Đạo!`,
     });
 
     await signInWithCredentials({ email, password });

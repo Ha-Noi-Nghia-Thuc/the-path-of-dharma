@@ -1,6 +1,7 @@
 const config = {
   env: {
     apiEndpoint: process.env.NEXT_PUBLIC_API_ENDPOINT!,
+    prodApiEndpoint: process.env.NEXT_PUBLIC_PROD_API_ENDPOINT!,
     imagekit: {
       publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!,
       urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!,
@@ -14,6 +15,12 @@ const config = {
       qstashToken: process.env.QSTASH_TOKEN!,
       qstashCurrentSigningKey: process.env.QSTASH_CURRENT_SIGNING_KEY!,
       qstashNextSigningKey: process.env.QSTASH_NEXT_SIGNING_KEY!,
+    },
+    smtp: {
+      host: process.env.SMTP_HOST!,
+      port: process.env.SMTP_PORT!,
+      user: process.env.SMTP_USER!,
+      pass: process.env.SMTP_PASS!,
     },
   },
 };
