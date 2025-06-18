@@ -3,7 +3,6 @@
 import { signIn } from "@/auth";
 import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
-import { sendEmail } from "@/lib/workflow";
 import ratelimit from "@/ratelimit";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
@@ -40,11 +39,16 @@ export const signUp = async (params: AuthCredentials) => {
       password: hashedPassword,
     });
 
-    await sendEmail({
-      email,
-      subject: "Welcome to the platform",
-      message: `Welcome ${fullName}, thank you for joining Chánh Đạo!`,
-    });
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/workflow/onboarding`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, fullName }),
+      }
+    );
 
     await signInWithCredentials({ email, password });
 

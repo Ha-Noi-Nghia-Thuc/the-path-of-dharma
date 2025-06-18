@@ -1,5 +1,6 @@
 import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
+import { generateEmailTemplate } from "@/lib/utils";
 import { sendEmail } from "@/lib/workflow";
 import { serve } from "@upstash/workflow/nextjs";
 import { eq } from "drizzle-orm";
@@ -42,10 +43,11 @@ export const { POST } = serve<InitialData>(async (context) => {
 
   // Welcome Email
   await context.run("new-signup", async () => {
+    const { subject, html } = generateEmailTemplate("welcome", { fullName });
     await sendEmail({
       email,
-      subject: "Welcome to the platform",
-      message: `Welcome ${fullName}`,
+      subject,
+      message: html,
     });
   });
 
@@ -58,18 +60,24 @@ export const { POST } = serve<InitialData>(async (context) => {
 
     if (state === "non-active") {
       await context.run("send-email-non-active", async () => {
+        const { subject, html } = generateEmailTemplate("remind7", {
+          fullName,
+        });
         await sendEmail({
           email,
-          subject: "Are you still there?",
-          message: `Hey ${fullName}, we miss you!`,
+          subject,
+          message: html,
         });
       });
     } else if (state === "active") {
       await context.run("send-email-active", async () => {
+        const { subject, html } = generateEmailTemplate("remind30", {
+          fullName,
+        });
         await sendEmail({
           email,
-          subject: "Welcome back!",
-          message: `Welcome back ${fullName}!`,
+          subject,
+          message: html,
         });
       });
     }
