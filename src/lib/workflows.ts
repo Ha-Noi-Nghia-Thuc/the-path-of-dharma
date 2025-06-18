@@ -23,7 +23,7 @@ export const triggerOnboardingWorkflow = async ({
 }) => {
   try {
     await qstashClient.publishJSON({
-      url: `${config.env.apiEndpoint}/api/workflow/onboarding`,
+      url: `${config.env.apiEndpoint}/api/workflows/onboarding`,
       body: {
         email,
         fullName,
