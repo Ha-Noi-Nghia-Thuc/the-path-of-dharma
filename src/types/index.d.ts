@@ -12,6 +12,8 @@ interface Sutra {
   description: string;
   color: string;
   cover: string;
+  pdf?: string;
+  link?: string;
   video: string;
   summary: string;
 }

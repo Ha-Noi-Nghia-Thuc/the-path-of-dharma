@@ -10,6 +10,30 @@ export const FIELD_TYPES = {
   password: "password",
 };
 
+export const adminSideBarLinks = [
+  {
+    icon: "HomeIcon",
+    route: "/admin",
+    text: "Home",
+  },
+  {
+    icon: "UsersIcon",
+    route: "/admin/users",
+    text: "All Users",
+  },
+  {
+    icon: "BookOpenTextIcon",
+    route: "/admin/books",
+    text: "All Sutras",
+  },
+
+  {
+    icon: "UserPlusIcon",
+    route: "/admin/account-requests",
+    text: "Account Requests",
+  },
+];
+
 export const sampleSutras = [
   {
     id: 1,
