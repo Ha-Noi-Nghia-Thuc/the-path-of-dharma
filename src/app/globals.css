@@ -104,3 +104,17 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--foreground));
 }
+
+/* Custom gradient utilities */
+@layer utilities {
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  .bg-gradient-conic {
+    background: conic-gradient(
+      from 180deg at 50% 50%,
+      var(--tw-gradient-stops)
+    );
+  }
+}
