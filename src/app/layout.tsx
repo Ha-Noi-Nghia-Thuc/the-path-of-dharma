@@ -36,9 +36,13 @@ export const metadata: Metadata = {
     "Tâm linh",
     "Thiền",
   ],
-  // authors: [{ name: "Hà Nội Nghĩa Thục", url: "https://yourdomain.com" }],
+  authors: [
+    {
+      name: "Hà Nội Nghĩa Thục",
+      url: "https://the-path-of-dharma.vercel.app/",
+    },
+  ],
   creator: "Hà Nội Nghĩa Thục",
-  themeColor: "#FCFBF7",
   robots: {
     index: true,
     follow: true,
@@ -51,11 +55,11 @@ export const metadata: Metadata = {
     title: "Chánh Đạo - The Path of Dharma",
     description:
       "Khám phá kho tàng Kinh điển Phật giáo — tụng đọc, nghiên cứu và chiêm nghiệm.",
-    url: "https://yourdomain.com",
+    url: "https://the-path-of-dharma.vercel.app/",
     siteName: "Chánh Đạo - The Path of Dharma",
     images: [
       {
-        url: "https://yourdomain.com/og-image.jpg",
+        url: "https://imagekit.io/public/share/4xz2wxxpg/332e4273020f5ffd53b6eeebfe70ff28c0303b775a2ff1e58bad2fcfba2ae45a6cb7479ff3e5b317079da2924ee1115ee433436978a8059b35c8704e41016dd070f7fa314ef78cab006522c7d1e75b10",
         width: 1200,
         height: 630,
         alt: "Chánh Đạo - The Path of Dharma - Kinh điển Phật giáo",

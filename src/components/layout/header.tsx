@@ -1,11 +1,11 @@
 "use client";
 
 import { cn, getInitials } from "@/lib/utils";
+import { Session } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Session } from "next-auth";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
 const navLinks = [
   { href: "/", label: "Trang Chủ" },

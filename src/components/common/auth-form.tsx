@@ -1,21 +1,6 @@
 "use client";
 
-import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React from "react";
-import {
-  DefaultValues,
-  FieldValues,
-  Path,
-  SubmitHandler,
-  useForm,
-  UseFormReturn,
-} from "react-hook-form";
-import { toast } from "sonner";
-import { ZodTypeAny } from "zod";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -23,8 +8,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import type {
+  DefaultValues,
+  FieldValues,
+  Path,
+  SubmitHandler,
+  UseFormReturn,
+} from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { ZodTypeAny } from "zod";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodTypeAny;
@@ -33,6 +33,10 @@ interface AuthFormProps<T extends FieldValues> {
   type: "sign-in" | "sign-up";
 }
 
+/**
+ * Reusable authentication form component
+ * Handles both sign-in and sign-up forms with validation
+ */
 const AuthForm = <T extends FieldValues>({
   type,
   schema,
@@ -40,6 +44,7 @@ const AuthForm = <T extends FieldValues>({
   onSubmit,
 }: AuthFormProps<T>) => {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const isSignIn = type === "sign-in";
 
   const form: UseFormReturn<T> = useForm({
@@ -48,53 +53,59 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    const result = await onSubmit(data);
+    setIsSubmitting(true);
 
-    if (result.success) {
-      toast(
-        `${
+    try {
+      const result = await onSubmit(data);
+
+      if (result.success) {
+        toast.success(
           isSignIn
-            ? "you have successfully signed in."
-            : "You have successfuly signed up."
-        }`
-      );
-
-      router.push("/");
-    } else {
-      toast("An error occurred.");
+            ? "Đăng nhập thành công! Chào mừng bạn trở lại."
+            : "Đăng ký thành công! Chào mừng bạn đến với Chánh Đạo."
+        );
+        router.push("/");
+      } else {
+        toast.error(
+          result.error ||
+            (isSignIn
+              ? "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin."
+              : "Đăng ký thất bại. Vui lòng thử lại.")
+        );
+      }
+    } catch (error) {
+      console.error("Auth form error:", error);
+      toast.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="flex flex-col gap-6 text-primary">
-      {/* Tiêu đề chính */}
-      <div className="text-center">
-        <h1 className="text-3xl tracking-tight">
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
           {isSignIn ? (
             <>
               Chào mừng trở lại với{" "}
-              <span className="font-heading font-semibold text-primary">
-                Chánh Đạo
-              </span>
+              <span className="font-heading text-primary">Chánh Đạo</span>
             </>
           ) : (
-            "Tạo tài khoản thư viện của bạn"
+            "Tạo tài khoản mới"
           )}
         </h1>
 
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="text-muted-foreground">
           {isSignIn
-            ? "Truy cập kho tàng kinh điển và kết nối với cộng đồng tu học."
-            : "Vui lòng điền đầy đủ thông tin bên dưới để bắt đầu hành trình học đạo."}
+            ? "Đăng nhập để truy cập kho tàng kinh điển và kết nối với cộng đồng tu học."
+            : "Điền thông tin bên dưới để bắt đầu hành trình học đạo cùng chúng tôi."}
         </p>
       </div>
 
-      {/* Biểu mẫu */}
+      {/* Form */}
       <Form {...form}>
-        <form
-          className="w-full space-y-5"
-          onSubmit={form.handleSubmit(handleSubmit)}
-        >
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           {Object.keys(defaultValues).map((fieldKey) => (
             <FormField
               key={fieldKey}
@@ -102,7 +113,7 @@ const AuthForm = <T extends FieldValues>({
               name={fieldKey as Path<T>}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="capitalize text-sm font-medium">
+                  <FormLabel className="text-sm font-medium">
                     {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES] ??
                       field.name}
                   </FormLabel>
@@ -115,7 +126,8 @@ const AuthForm = <T extends FieldValues>({
                       placeholder={`Nhập ${
                         FIELD_NAMES[field.name as keyof typeof FIELD_NAMES] ??
                         field.name
-                      } của bạn`}
+                      }`}
+                      disabled={isSubmitting}
                       {...field}
                     />
                   </FormControl>
@@ -125,22 +137,27 @@ const AuthForm = <T extends FieldValues>({
             />
           ))}
 
-          {/* Nút gửi */}
+          {/* Submit button */}
           <Button
             type="submit"
-            className="w-full h-12 text-lg font-semibold text-white"
+            className="w-full h-11 text-base font-semibold"
+            disabled={isSubmitting}
           >
-            {isSignIn ? "Đăng nhập" : "Đăng ký"}
+            {isSubmitting
+              ? "Đang xử lý..."
+              : isSignIn
+              ? "Đăng nhập"
+              : "Đăng ký"}
           </Button>
         </form>
       </Form>
 
-      {/* Điều hướng đăng nhập / đăng ký */}
+      {/* Navigation link */}
       <p className="text-center text-sm text-muted-foreground">
         {isSignIn ? "Chưa có tài khoản?" : "Đã có tài khoản?"}{" "}
         <Link
           href={isSignIn ? "/sign-up" : "/sign-in"}
-          className="font-medium text-primary hover:underline"
+          className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors"
         >
           {isSignIn ? "Đăng ký ngay" : "Đăng nhập"}
         </Link>

@@ -8,8 +8,19 @@ const {
   },
 } = config;
 
+// initialize ImageKit instance
 const imagekit = new ImageKit({ publicKey, privateKey, urlEndpoint });
 
+// handler for ImageKit authentication
 export async function GET() {
-  return NextResponse.json(imagekit.getAuthenticationParameters());
+  try {
+    const authParams = imagekit.getAuthenticationParameters();
+    return NextResponse.json(authParams);
+  } catch (error) {
+    console.error("ImageKit authentication error:", error);
+    return NextResponse.json(
+      { error: "Failed to get authentication parameters" },
+      { status: 500 }
+    );
+  }
 }

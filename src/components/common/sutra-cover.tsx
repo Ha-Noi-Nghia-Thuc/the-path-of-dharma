@@ -15,11 +15,11 @@ const variantStyles: Record<SutraCoverVariant, string> = {
   wide: "w-[256px] h-[354px] xs:w-[296px] xs:h-[404px] sm:w-[320px] sm:h-[440px]",
 };
 
-interface SutraProps {
+interface SutraCoverProps {
   variant?: SutraCoverVariant;
   className?: string;
   coverColor: string;
-  coverImage: string;
+  coverUrl: string;
   alt?: string;
   priority?: boolean;
 }
@@ -28,10 +28,10 @@ const SutraCover = ({
   variant = "regular",
   className,
   coverColor = "#C9A66B",
-  coverImage = "https://placehold.co/400x600.png",
-  alt = "Sutra cover",
+  coverUrl,
+  alt = "Bìa kinh điển",
   priority = false,
-}: SutraProps) => {
+}: SutraCoverProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -47,7 +47,7 @@ const SutraCover = ({
       role="img"
       aria-label={alt}
     >
-      {/* Book spine/background */}
+      {/* Book spine/background SVG */}
       <div className="relative w-full h-full">
         <SutraCoverSvg coverColor={coverColor} />
 
@@ -55,7 +55,7 @@ const SutraCover = ({
         <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-sm pointer-events-none" />
       </div>
 
-      {/* Fixed book cover image container - better positioning */}
+      {/* Cover image container */}
       <div
         className="absolute z-10 overflow-hidden rounded-sm shadow-inner"
         style={{
@@ -67,20 +67,21 @@ const SutraCover = ({
       >
         {/* Loading state */}
         {!imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 animate-pulse flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/80 animate-pulse flex items-center justify-center">
             <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
           </div>
         )}
 
         {/* Error state */}
         {imageError && (
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted/80 flex items-center justify-center">
             <div className="text-center p-2">
               <svg
-                className="w-6 h-6 mx-auto mb-1 text-gray-400"
+                className="w-6 h-6 mx-auto mb-1 text-muted-foreground"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -89,22 +90,19 @@ const SutraCover = ({
                   d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                No Image
-              </p>
+              <p className="text-xs text-muted-foreground">Không có ảnh</p>
             </div>
           </div>
         )}
 
         {/* Main cover image */}
         <Image
-          src={coverImage}
+          src={coverUrl || "/placeholder.svg"}
           alt={alt}
           fill
           priority={priority}
           className={cn(
             "object-cover transition-all duration-300",
-            "group-hover:scale-100",
             imageLoaded ? "opacity-100" : "opacity-0"
           )}
           onLoad={() => setImageLoaded(true)}
@@ -123,9 +121,9 @@ const SutraCover = ({
         />
       </div>
 
-      {/* Book pages effect - cleaner implementation */}
+      {/* Book pages effect */}
       <div
-        className="absolute z-5 bg-white dark:bg-gray-100"
+        className="absolute z-5 bg-background shadow-sm"
         style={{
           right: "7%",
           top: "6%",
@@ -137,7 +135,7 @@ const SutraCover = ({
       />
 
       <div
-        className="absolute z-4 bg-gray-50 dark:bg-gray-200"
+        className="absolute z-4 bg-muted shadow-sm"
         style={{
           right: "5%",
           top: "7%",

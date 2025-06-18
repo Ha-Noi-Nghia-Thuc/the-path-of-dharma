@@ -23,7 +23,7 @@ export const adminSideBarLinks = [
   },
   {
     icon: "BookOpenTextIcon",
-    route: "/admin/books",
+    route: "/admin/sutras",
     text: "All Sutras",
   },
 
@@ -36,18 +36,20 @@ export const adminSideBarLinks = [
 
 export const sampleSutras = [
   {
-    id: 1,
+    id: "1",
     title: "Kinh Kim Cương Bát Nhã Ba La Mật",
     author: "Đức Phật Thích Ca Mâu Ni",
-    rating: 4.9,
-    description:
-      "Một trong những bộ kinh Đại Thừa quan trọng nhất, tập trung vào giáo lý Bát Nhã (trí tuệ siêu việt) về tánh không và sự vô ngã. Kinh Kim Cương giúp người đọc thấu hiểu bản chất của vạn vật và giải thoát khỏi mọi chấp trước.",
-    color: "#8b2f28", // đỏ nâu trầm, phù hợp với nền bìa
-    cover:
-      "https://m.media-amazon.com/images/I/711oexsZPIL._UF1000%2C1000_QL80_.jpg",
-    video: "",
-    summary:
-      "Kinh Kim Cương Bát Nhã Ba La Mật là một trong những bộ kinh Đại Thừa quan trọng nhất, nhấn mạnh về tánh không (Sunyata) và trí tuệ Bát Nhã. Kinh chỉ ra rằng mọi hiện tượng đều vô thường, vô ngã, không có tự tính. Bằng cách quán chiếu sâu sắc điều này, hành giả có thể phá bỏ mọi chấp trước, đạt được giác ngộ. Kinh thường được trì tụng và nghiên cứu rộng rãi trong Phật giáo Đông Á.",
+    scripture: "Kinh",
+    description: "Một trong những bộ kinh Đại Thừa quan trọng nhất...",
+    summary: "Kinh Kim Cương Bát Nhã Ba La Mật là một trong những bộ kinh...",
+    totalView: 12000,
+    coverColor: "#8b2f28",
+    coverUrl:
+      "https://m.media-amazon.com/images/I/711oexsZPIL._UF1000,1000_QL80_.jpg",
+    pdfUrl: "",
+    linkUrl: "",
+    videoUrl: "",
+    tags: ["Bát Nhã", "Tánh không"],
   },
   {
     id: 2,

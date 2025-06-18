@@ -1,18 +1,26 @@
-import { Session } from "next-auth";
-import React from "react";
+import type { Session } from "next-auth";
 
-const Header = ({ session }: { session: Session }) => {
+interface AdminHeaderProps {
+  session: Session;
+}
+
+const AdminHeader = ({ session }: AdminHeaderProps) => {
+  const userName = session?.user?.name || "Quản trị viên";
+  const userEmail = session?.user?.email || "";
+
   return (
-    <header className="flex lg:items-end items-start justify-between lg:flex-row flex-col gap-5 sm:mb-10 mb-5">
-      <div>
-        <h2 className="text-2xl font-semibold">{session?.user?.name}</h2>
-
-        <p className="text-base text-slate-500">
-          Monitor all of your users and books here
+    <header className="flex lg:items-end items-start justify-between lg:flex-row flex-col gap-5 pb-6 border-b border-border">
+      {/* Welcome section */}
+      <div className="space-y-1">
+        <h1 className="text-2xl font-semibold text-foreground">
+          Xin chào, {userName}
+        </h1>
+        <p className="text-base text-muted-foreground">
+          Quản lý người dùng và nội dung kinh điển
         </p>
       </div>
     </header>
   );
 };
 
-export default Header;
+export default AdminHeader;

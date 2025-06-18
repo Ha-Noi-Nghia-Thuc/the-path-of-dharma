@@ -1,28 +1,41 @@
 "use client";
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { adminSideBarLinks } from "@/constants";
 import { cn, getInitials } from "@/lib/utils";
 import * as Icons from "lucide-react";
+import type { Session } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { ElementType } from "react";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Session } from "next-auth";
+import type { ElementType } from "react";
 
-const Sidebar = ({ session }: { session: Session }) => {
+interface AdminSidebarProps {
+  session: Session;
+}
+
+/**
+ * Admin sidebar component
+ * Provides navigation for admin panel
+ */
+const AdminSidebar = ({ session }: AdminSidebarProps) => {
   const pathname = usePathname();
+  const userName = session?.user?.name || "Quản trị viên";
+  const userEmail = session?.user?.email || "";
 
   return (
-    <div className=" sticky left-0 top-0 flex h-dvh flex-col justify-between px-5 pb-5 pt-10">
-      <div>
+    <aside className="sticky left-0 top-0 flex h-screen w-64 flex-col justify-between bg-card border-r border-border px-5 pb-5 pt-10">
+      {/* Logo and navigation */}
+      <div className="space-y-10">
+        {/* Logo */}
         <Link
           href="/"
-          className="font-heading font-semibold text-2xl md:text-4xl text-primary hover:text-accent/50 transition-colors duration-200"
+          className="font-heading font-semibold text-2xl md:text-3xl text-primary hover:text-accent transition-colors duration-200"
         >
           Chánh Đạo
         </Link>
 
-        <div className="mt-10 flex flex-col gap-5">
+        {/* Navigation links */}
+        <nav className="space-y-2">
           {adminSideBarLinks.map((link) => {
             const isSelected =
               (link.route !== "/admin" &&
@@ -31,49 +44,43 @@ const Sidebar = ({ session }: { session: Session }) => {
               pathname === link.route;
 
             const LucideIcon = (Icons as any)[link.icon] as ElementType;
+
             return (
               <Link key={link.route} href={link.route}>
                 <div
                   className={cn(
-                    "flex flex-row items-center w-full gap-2 rounded-lg px-5 py-3.5 max-md:justify-center",
-                    isSelected && "bg-primary-admin shadow-sm"
+                    "flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors",
+                    isSelected
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
-                  <div className="relative size-5">
-                    {LucideIcon && (
-                      <LucideIcon
-                        className={cn(
-                          "size-5 object-contain",
-                          isSelected ? "text-white" : "text-dark"
-                        )}
-                      />
-                    )}
-                  </div>
-
-                  <p className={cn(isSelected ? "text-white" : "text-dark")}>
-                    {link.text}
-                  </p>
+                  {LucideIcon && <LucideIcon className="h-5 w-5" />}
+                  <span>{link.text}</span>
                 </div>
               </Link>
             );
           })}
-        </div>
+        </nav>
       </div>
 
-      <div className="my-8 flex w-full flex-row gap-2 rounded-full border px-6 py-2 shadow-sm max-md:px-2">
-        <Avatar>
-          <AvatarFallback className="bg-amber-100">
-            {getInitials(session?.user?.name || "IN")}
+      {/* User profile section */}
+      <div className="flex items-center gap-3 rounded-lg border border-border bg-background/50 px-4 py-3">
+        <Avatar className="h-8 w-8">
+          <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+            {getInitials(userName)}
           </AvatarFallback>
         </Avatar>
 
-        <div className="flex flex-col max-md:hidden">
-          <p className="font-semibold text-dark-200">{session?.user?.name}</p>
-          <p className="text-xs text-light-500">{session?.user?.email}</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground truncate">
+            {userName}
+          </p>
+          <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;
