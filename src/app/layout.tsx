@@ -1,8 +1,8 @@
-import type React from "react";
 import { auth } from "@/auth";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Noto_Sans, Playfair_Display } from "next/font/google";
+import type React from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
 

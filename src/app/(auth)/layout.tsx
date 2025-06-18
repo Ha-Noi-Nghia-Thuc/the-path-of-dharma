@@ -9,16 +9,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
       {/* Form Section */}
       <section className="flex flex-1 items-center justify-center px-6 py-12 sm:px-12">
         <div className="w-full max-w-md rounded-lg bg-card p-8 shadow-sm border border-border">
-          {/* Back to home button */}
-          <Link
-            href="/"
-            className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors duration-200 mb-6"
-            aria-label="Quay về trang chủ"
-          >
-            <MoveLeftIcon size={20} className="mr-2" />
-            <span className="text-sm">Quay về trang chủ</span>
-          </Link>
-
           {/* Form content */}
           <div>{children}</div>
         </div>

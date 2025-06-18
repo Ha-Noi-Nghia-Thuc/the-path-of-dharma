@@ -13,13 +13,32 @@ const {
   },
 } = config;
 
-//  ImageKit authenticator function
+/**
+ * ImageKit authenticator function
+ * Fetches authentication parameters from API
+ */
 const authenticator = async () => {
   try {
-    const response = await fetch(`${config.env.apiEndpoint}/api/auth/imagekit`);
+    // Always use the current origin for API calls in development
+    const apiUrl =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : config.env.apiEndpoint;
+
+    console.log("Using API URL:", apiUrl); // Debug log
+
+    const response = await fetch(`${apiUrl}/api/auth/imagekit`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Add credentials for same-origin requests
+      credentials: "same-origin",
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
+      console.error("ImageKit auth response error:", errorText);
       throw new Error(
         `Request failed with status ${response.status}: ${errorText}`
       );
@@ -28,9 +47,21 @@ const authenticator = async () => {
     const data = await response.json();
     const { signature, expire, token } = data;
 
+    if (!signature || !expire || !token) {
+      throw new Error("Invalid authentication response from server");
+    }
+
+    console.log("ImageKit auth successful"); // Debug log
+
     return { token, expire, signature };
   } catch (error: any) {
     console.error("ImageKit authentication error:", error);
+
+    // Show user-friendly error message
+    toast.error(
+      "Không thể kết nối đến dịch vụ tải file. Vui lòng thử lại sau."
+    );
+
     throw new Error(`Authentication request failed: ${error.message}`);
   }
 };
@@ -46,6 +77,10 @@ interface FileUploadProps {
   disabled?: boolean;
 }
 
+/**
+ * File upload component using ImageKit
+ * Supports images, videos, and other file types
+ */
 const FileUpload = ({
   type,
   accept,
@@ -85,14 +120,23 @@ const FileUpload = ({
   };
 
   const onSuccess = (res: any) => {
-    setFile(res);
-    onFileChange(res.filePath);
+    console.log("Upload successful:", res); // Debug log
+
+    // Ensure the path starts with / for consistency
+    const filePath = res.filePath.startsWith("/")
+      ? res.filePath
+      : `/${res.filePath}`;
+
+    setFile({ ...res, filePath });
+    onFileChange(filePath);
     setIsUploading(false);
     setProgress(0);
-    toast.success(`Tải lên ${res.filePath} thành công!`);
+    toast.success(`Tải lên thành công!`);
   };
 
   const onValidate = (file: File) => {
+    console.log("Validating file:", file.name, file.size); // Debug log
+
     if (type === "image") {
       if (file.size > 20 * 1024 * 1024) {
         toast.error("Vui lòng chọn hình ảnh có kích thước nhỏ hơn 20MB");
@@ -118,6 +162,25 @@ const FileUpload = ({
     toast.success("Đã xóa tệp");
   };
 
+  // Check if ImageKit is properly configured
+  const isImageKitConfigured = publicKey && urlEndpoint;
+
+  if (!isImageKitConfigured) {
+    return (
+      <div className="p-6 border-2 border-dashed border-destructive rounded-md bg-destructive/5">
+        <div className="text-center">
+          <p className="text-destructive font-medium">
+            ImageKit chưa được cấu hình
+          </p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Vui lòng kiểm tra environment variables
+            NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY và NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <ImageKitProvider
       publicKey={publicKey}
@@ -132,12 +195,14 @@ const FileUpload = ({
           useUniqueFileName={true}
           validateFile={onValidate}
           onUploadStart={() => {
+            console.log("Upload started"); // Debug log
             setIsUploading(true);
             setProgress(0);
           }}
           onUploadProgress={({ loaded, total }) => {
             const percent = Math.round((loaded / total) * 100);
             setProgress(percent);
+            console.log(`Upload progress: ${percent}%`); // Debug log
           }}
           folder={folder}
           accept={accept}
@@ -154,6 +219,7 @@ const FileUpload = ({
           onClick={(e) => {
             e.preventDefault();
             if (ikUploadRef.current && !disabled && !isUploading) {
+              console.log("Triggering file upload"); // Debug log
               ikUploadRef.current.click();
             }
           }}

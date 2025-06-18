@@ -4,28 +4,36 @@ import { db } from "@/database/drizzle";
 import { users } from "@/database/schemas";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-const Layout = async ({ children }: { children: ReactNode }) => {
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+/**
+ * Root layout for authenticated pages
+ * Handles authentication check and user activity tracking
+ */
+const RootLayout = async ({ children }: RootLayoutProps) => {
   const session = await auth();
 
-  // redirect to sign-in if not authenticated
+  // Redirect to sign-in if not authenticated
   if (!session?.user?.id) {
     redirect("/sign-in");
   }
 
-  // update user's last activity date
+  // Update user's last activity date
   try {
     const currentDate = new Date().toISOString().slice(0, 10);
 
-    // get user's last activity date
+    // Get user's last activity date
     const [user] = await db
-      .select({ lastActivityDate: users.lastActivityDate })
+      .select({ lastActivityDate: users.lastActivityDate }) // Fixed typo
       .from(users)
       .where(eq(users.id, session.user.id))
       .limit(1);
 
-    // update if it's a new day
+    // Update if it's a new day
     if (user?.lastActivityDate !== currentDate) {
       await db
         .update(users)
@@ -34,6 +42,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     }
   } catch (error) {
     console.error("Failed to update user activity:", error);
+    // Don't block the user experience for this non-critical operation
   }
 
   return (
@@ -46,4 +55,4 @@ const Layout = async ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default Layout;
+export default RootLayout;

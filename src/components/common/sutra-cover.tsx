@@ -1,8 +1,9 @@
 "use client";
 
+import config from "@/lib/config";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import SutraCoverSvg from "./sutra-cover-svg";
 
 type SutraCoverVariant = "extraSmall" | "small" | "medium" | "regular" | "wide";
@@ -19,16 +20,20 @@ interface SutraCoverProps {
   variant?: SutraCoverVariant;
   className?: string;
   coverColor: string;
-  coverUrl: string;
+  coverImage: string;
   alt?: string;
   priority?: boolean;
 }
 
+/**
+ * Sutra cover component with 3D book effect
+ * Displays book cover with SVG background and image overlay
+ */
 const SutraCover = ({
   variant = "regular",
   className,
   coverColor = "#C9A66B",
-  coverUrl,
+  coverImage,
   alt = "Bìa kinh điển",
   priority = false,
 }: SutraCoverProps) => {
@@ -97,7 +102,11 @@ const SutraCover = ({
 
         {/* Main cover image */}
         <Image
-          src={coverUrl || "/placeholder.svg"}
+          src={
+            coverImage?.startsWith("/")
+              ? `${config.env.imagekit.urlEndpoint}${coverImage}`
+              : coverImage || "/placeholder.svg"
+          }
           alt={alt}
           fill
           priority={priority}
