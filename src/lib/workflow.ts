@@ -1,17 +1,19 @@
-import nodemailer from "nodemailer";
-import config from "./config";
 import { Client as QStashClient } from "@upstash/qstash";
 import { Client as WorkflowClient } from "@upstash/workflow";
+import nodemailer from "nodemailer";
+import config from "./config";
 
 export const workflowClient = new WorkflowClient({
   baseUrl: config.env.upstash.qstashUrl,
   token: config.env.upstash.qstashToken,
 });
 
+// initialize QStash client
 const qstashClient = new QStashClient({
   token: config.env.upstash.qstashToken,
 });
 
+// trigger onboarding workflow via QStash
 export const triggerOnboardingWorkflow = async ({
   email,
   fullName,
@@ -19,17 +21,20 @@ export const triggerOnboardingWorkflow = async ({
   email: string;
   fullName: string;
 }) => {
-  const result = await qstashClient.publishJSON({
-    url: `${config.env.apiEndpoint}/api/workflow/onboarding`,
-    body: {
-      email,
-      fullName,
-    },
-  });
-
-  console.log("🚀 QStash Trigger result:", result);
+  try {
+    await qstashClient.publishJSON({
+      url: `${config.env.apiEndpoint}/api/workflow/onboarding`,
+      body: {
+        email,
+        fullName,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to trigger onboarding workflow:", error);
+  }
 };
 
+// send email using configured SMTP
 export const sendEmail = async ({
   email,
   subject,
@@ -39,8 +44,6 @@ export const sendEmail = async ({
   subject: string;
   message: string;
 }) => {
-  console.log("📧 Đang gửi email tới:", email);
-
   const transporter = nodemailer.createTransport({
     host: config.env.smtp.host,
     port: Number(config.env.smtp.port),
@@ -58,8 +61,7 @@ export const sendEmail = async ({
       subject,
       html: message,
     });
-    console.log("✅ Đã gửi email thành công");
   } catch (err) {
-    console.error("❌ Gửi email thất bại:", err);
+    console.error("Failed to send email:", err);
   }
 };
