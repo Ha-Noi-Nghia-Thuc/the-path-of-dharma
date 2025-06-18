@@ -8,6 +8,7 @@ import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { triggerOnboardingWorkflow } from "../workflow";
 
 export const signUp = async (params: AuthCredentials) => {
   const { fullName, email, password } = params;
@@ -33,22 +34,19 @@ export const signUp = async (params: AuthCredentials) => {
   const hashedPassword = await hash(password, 10);
 
   try {
-    await db.insert(users).values({
-      fullName,
-      email,
-      password: hashedPassword,
-    });
+    const [newUser] = await db
+      .insert(users)
+      .values({
+        fullName,
+        email,
+        password: hashedPassword,
+      })
+      .returning();
 
-    await fetch(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/workflow/onboarding`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, fullName }),
-      }
-    );
+    await triggerOnboardingWorkflow({
+      email: newUser.email,
+      fullName: newUser.fullName,
+    });
 
     await signInWithCredentials({ email, password });
 

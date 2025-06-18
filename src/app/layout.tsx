@@ -38,6 +38,7 @@ export const metadata: Metadata = {
   ],
   // authors: [{ name: "Hà Nội Nghĩa Thục", url: "https://yourdomain.com" }],
   creator: "Hà Nội Nghĩa Thục",
+  themeColor: "#FCFBF7",
   robots: {
     index: true,
     follow: true,
