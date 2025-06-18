@@ -24,7 +24,7 @@ export const generateEmailTemplate = (
   // Modern CSS styles matching your project's design system
   const baseStyles = `
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Noto+Sans:wght@300;400;500;600&display=swap');
       
       * {
         margin: 0;
@@ -33,7 +33,8 @@ export const generateEmailTemplate = (
       }
       
       .email-container {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: "Noto Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 14px;
         max-width: 600px;
         margin: 0 auto;
         background: #ffffff;
@@ -43,59 +44,39 @@ export const generateEmailTemplate = (
         border: 1px solid #e5e7eb;
       }
       
-      .header {
-        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-        padding: 32px 40px;
-        text-align: center;
-      }
-      
-      .logo {
-        color: #ffffff;
-        font-size: 28px;
-        font-weight: 600;
-        margin: 0;
-        letter-spacing: -0.025em;
-      }
-      
-      .subtitle {
-        color: #d1d5db;
-        font-size: 14px;
-        font-weight: 400;
-        margin-top: 8px;
-      }
-      
       .content {
         padding: 40px;
         background: #ffffff;
       }
       
       .greeting {
-        color: #111827;
-        font-size: 24px;
-        font-weight: 600;
+        font-family: "Playfair Display", serif;
+        color: #333333;
+        font-size: 22px;
+        font-weight: 500;
         margin: 0 0 24px 0;
         line-height: 1.3;
         letter-spacing: -0.025em;
       }
       
       .message {
-        color: #374151;
-        font-size: 16px;
+        color: #4b5563;
+        font-size: 14px;
         line-height: 1.6;
-        margin: 0 0 20px 0;
+        margin: 0 0 18px 0;
         font-weight: 400;
       }
       
       .message strong {
-        color: #111827;
-        font-weight: 600;
+        color: #333333;
+        font-weight: 500;
       }
       
       .cta-button {
         display: inline-block;
-        margin: 32px 0;
+        margin: 28px 0;
         padding: 12px 24px;
-        background: #111827;
+        background: #333333;
         color: #ffffff !important;
         text-decoration: none;
         border-radius: 8px;
@@ -103,7 +84,7 @@ export const generateEmailTemplate = (
         font-size: 14px;
         letter-spacing: 0.025em;
         transition: all 0.2s ease;
-        border: 1px solid #111827;
+        border: 1px solid #333333;
       }
       
       .cta-button:hover {
@@ -113,19 +94,21 @@ export const generateEmailTemplate = (
       }
       
       .quote {
-        background: #f9fafb;
-        border-left: 4px solid #6b7280;
+        background: #fafafa;
+        border-left: 3px solid #d1d5db;
         padding: 20px 24px;
-        margin: 32px 0;
+        margin: 28px 0;
         border-radius: 0 8px 8px 0;
       }
       
       .quote-text {
+        font-family: "Playfair Display", serif;
         color: #4b5563;
         font-size: 15px;
         line-height: 1.6;
         font-style: italic;
         margin: 0;
+        font-weight: 400;
       }
       
       .quote-author {
@@ -134,43 +117,53 @@ export const generateEmailTemplate = (
         font-weight: 500;
         margin-top: 12px;
         text-align: right;
+        font-family: "Noto Sans", sans-serif;
       }
       
       .footer {
         padding: 32px 40px;
-        background: #f9fafb;
+        background: #fafafa;
         border-top: 1px solid #e5e7eb;
         text-align: center;
       }
       
       .footer-text {
         color: #6b7280;
-        font-size: 14px;
+        font-size: 13px;
         line-height: 1.5;
         margin: 0;
       }
       
       .divider {
         height: 1px;
-        background: #e5e7eb;
-        margin: 32px 0;
+        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+        margin: 24px 0;
       }
       
       .highlight {
-        background: #fef3c7;
+        background: #f3f4f6;
         padding: 2px 6px;
         border-radius: 4px;
-        color: #92400e;
+        color: #374151;
         font-weight: 500;
+        border: 1px solid #e5e7eb;
+      }
+      
+      .lotus-symbol {
+        color: #9ca3af;
+        font-size: 16px;
+        margin: 16px 0;
+        text-align: center;
       }
       
       @media (max-width: 640px) {
         .email-container {
           margin: 0 16px;
+          border-radius: 8px;
         }
         
         .header, .content, .footer {
-          padding: 24px;
+          padding: 24px 20px;
         }
         
         .greeting {
@@ -178,7 +171,13 @@ export const generateEmailTemplate = (
         }
         
         .message {
-          font-size: 15px;
+          font-size: 14px;
+        }
+        
+        .cta-button {
+          display: block;
+          text-align: center;
+          margin: 24px 0;
         }
       }
     </style>
@@ -192,11 +191,6 @@ export const generateEmailTemplate = (
         html: `
 ${baseStyles}
 <div class="email-container">
-  <div class="header">
-    <h1 class="logo">Chánh Đạo</h1>
-    <p class="subtitle">Thư viện Phật pháp trực tuyến</p>
-  </div>
-  
   <div class="content">
     <h2 class="greeting">Kính chào ${fullName},</h2>
     
@@ -210,6 +204,8 @@ ${baseStyles}
       hỗ trợ bạn trên con đường hướng về Chánh Pháp.
     </p>
     
+    <div class="divider"></div>
+    
     <a href="https://the-path-of-dharma.vercel.app/" class="cta-button">
       Bắt đầu khám phá →
     </a>
@@ -220,6 +216,8 @@ ${baseStyles}
       </p>
       <p class="quote-author">– Đức Phật</p>
     </div>
+    
+    <div class="lotus-symbol">❀</div>
   </div>
   
   <div class="footer">
@@ -237,11 +235,6 @@ ${baseStyles}
         html: `
 ${baseStyles}
 <div class="email-container">
-  <div class="header">
-    <h1 class="logo">Chánh Đạo</h1>
-    <p class="subtitle">Thư viện Phật pháp trực tuyến</p>
-  </div>
-  
   <div class="content">
     <h2 class="greeting">Kính gửi ${fullName},</h2>
     
@@ -253,6 +246,8 @@ ${baseStyles}
       Pháp học cần sự đều đặn. Mỗi ngày, dù chỉ một đoạn kinh, một câu kệ, cũng góp phần nuôi dưỡng <span class="highlight">chánh niệm</span> và tuệ giác.
     </p>
     
+    <div class="divider"></div>
+    
     <a href="https://the-path-of-dharma.vercel.app/" class="cta-button">
       Tiếp tục hành trình →
     </a>
@@ -263,6 +258,8 @@ ${baseStyles}
       </p>
       <p class="quote-author">– Kinh Pháp Cú, kệ 122</p>
     </div>
+    
+    <div class="lotus-symbol">❀</div>
   </div>
   
   <div class="footer">
@@ -280,11 +277,6 @@ ${baseStyles}
         html: `
 ${baseStyles}
 <div class="email-container">
-  <div class="header">
-    <h1 class="logo">Chánh Đạo</h1>
-    <p class="subtitle">Thư viện Phật pháp trực tuyến</p>
-  </div>
-  
   <div class="content">
     <h2 class="greeting">Kính gửi ${fullName},</h2>
     
@@ -296,6 +288,8 @@ ${baseStyles}
       Nhưng <span class="highlight">Chánh Pháp</span> luôn ở đó, như ánh trăng soi sáng đêm tối – chỉ cần bạn dừng lại, là có thể thấy rõ.
     </p>
     
+    <div class="divider"></div>
+    
     <a href="https://the-path-of-dharma.vercel.app/" class="cta-button">
       Quay về nương tựa Pháp →
     </a>
@@ -306,6 +300,8 @@ ${baseStyles}
       </p>
       <p class="quote-author">– Đức Phật, Kinh Đại Bát Niết Bàn</p>
     </div>
+    
+    <div class="lotus-symbol">❀</div>
   </div>
   
   <div class="footer">
