@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import Header from "@/components/admin/header";
 import Sidebar from "@/components/admin/sidebar";
 import { redirect } from "next/navigation";
-import React, { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
@@ -18,12 +18,16 @@ const Layout = async ({ children }: { children: ReactNode }) => {
   // }
 
   return (
-    <main className="flex min-h-screen w-full">
+    <main className="flex">
       <Sidebar session={session} />
 
-      <div className="flex w-[calc(100%-264px)] flex-1 flex-col p-5 xs:p-10">
-        <Header session={session} />
-        <div className="mt-6">{children}</div>
+      <div className="flex min-h-screen w-full pl-14 lg:pl-0">
+        <div className="flex w-full lg:w-[calc(100%-256px)] flex-1 flex-col">
+          <div className="p-4 lg:p-8 pt-16 lg:pt-8">
+            <Header session={session} />
+            <div className="mt-6">{children}</div>
+          </div>
+        </div>
       </div>
     </main>
   );

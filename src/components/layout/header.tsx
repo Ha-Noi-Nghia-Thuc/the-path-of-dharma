@@ -1,34 +1,33 @@
 "use client";
 
 import { cn, getInitials } from "@/lib/utils";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 
 const navLinks = [
-  { href: "/", label: "Trang Chủ" },
-  { href: "/library", label: "Thư Viện" },
+  { href: "/", label: "Trang chủ" },
+  { href: "/library", label: "Thư viện" },
 ];
 
 const Header = ({ session }: { session: Session }) => {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 py-4 md:py-6 flex justify-between items-center">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+      <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link
           href="/"
-          className="font-heading font-semibold text-2xl md:text-4xl text-primary hover:text-accent/50 transition-colors duration-200"
+          className="font-heading font-semibold text-2xl text-foreground hover:text-muted-foreground transition-colors duration-200"
         >
           Chánh Đạo
         </Link>
 
         {/* Navigation */}
-        <nav>
-          <ul className="flex gap-6 md:gap-8 items-center">
+        <nav className="flex items-center gap-8">
+          <ul className="hidden sm:flex gap-6 items-center">
             {navLinks.map(({ href, label }) => {
               const isActive = pathname === href;
 
@@ -37,34 +36,29 @@ const Header = ({ session }: { session: Session }) => {
                   <Link
                     href={href}
                     className={cn(
-                      "font-heading font-semibold relative px-3 py-2 rounded-lg transition-all duration-200",
+                      "text-sm font-medium relative px-2 py-1 rounded-md transition-colors duration-200",
                       isActive
-                        ? "text-accent/50 bg-primary/10"
-                        : "text-primary hover:text-accent/50 hover:bg-primary/10"
+                        ? "text-foreground bg-accent"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     )}
                   >
                     {label}
-                    {isActive && (
-                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-primary-light rounded-full" />
-                    )}
                   </Link>
                 </li>
               );
             })}
-            <li>
-              <Link
-                href="/my-profile"
-                className="
-                  font-heading font-semibold relative px-3 py-2 rounded-lg transition-all duration-200"
-              >
-                <Avatar>
-                  <AvatarFallback className="bg-primary-light border border-primary">
-                    {getInitials(session?.user?.name || "IN")}
-                  </AvatarFallback>
-                </Avatar>
-              </Link>
-            </li>
           </ul>
+
+          <Link
+            href="/my-profile"
+            className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Avatar className="h-9 w-9">
+              <AvatarFallback className="bg-accent text-accent-foreground text-xs">
+                {getInitials(session?.user?.name || "U")}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
         </nav>
       </div>
     </header>

@@ -33,10 +33,6 @@ interface AuthFormProps<T extends FieldValues> {
   type: "sign-in" | "sign-up";
 }
 
-/**
- * Reusable authentication form component
- * Handles both sign-in and sign-up forms with validation
- */
 const AuthForm = <T extends FieldValues>({
   type,
   schema,
@@ -59,11 +55,7 @@ const AuthForm = <T extends FieldValues>({
       const result = await onSubmit(data);
 
       if (result.success) {
-        toast.success(
-          isSignIn
-            ? "Đăng nhập thành công! Chào mừng bạn trở lại."
-            : "Đăng ký thành công! Chào mừng bạn đến với Chánh Đạo."
-        );
+        toast.success(isSignIn ? "Đăng nhập thành công" : "Đăng ký thành công");
         router.push("/");
       } else {
         toast.error(
@@ -84,22 +76,14 @@ const AuthForm = <T extends FieldValues>({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          {isSignIn ? (
-            <>
-              Chào mừng trở lại với{" "}
-              <span className="font-heading text-primary">Chánh Đạo</span>
-            </>
-          ) : (
-            "Tạo tài khoản mới"
-          )}
+      <div className="space-y-2">
+        <h1 className="text-xl font-semibold text-foreground">
+          {isSignIn ? "Đăng nhập" : "Tạo tài khoản"}
         </h1>
-
-        <p className="text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {isSignIn
-            ? "Đăng nhập để truy cập kho tàng kinh điển và kết nối với cộng đồng tu học."
-            : "Điền thông tin bên dưới để bắt đầu hành trình học đạo cùng chúng tôi."}
+            ? "Chào mừng bạn trở lại với Chánh Đạo"
+            : "Tham gia cộng đồng học Phật"}
         </p>
       </div>
 
@@ -128,6 +112,7 @@ const AuthForm = <T extends FieldValues>({
                         field.name
                       }`}
                       disabled={isSubmitting}
+                      className="text-sm"
                       {...field}
                     />
                   </FormControl>
@@ -140,7 +125,7 @@ const AuthForm = <T extends FieldValues>({
           {/* Submit button */}
           <Button
             type="submit"
-            className="w-full h-11 text-base font-semibold"
+            className="w-full text-sm"
             disabled={isSubmitting}
           >
             {isSubmitting
@@ -157,9 +142,9 @@ const AuthForm = <T extends FieldValues>({
         {isSignIn ? "Chưa có tài khoản?" : "Đã có tài khoản?"}{" "}
         <Link
           href={isSignIn ? "/sign-up" : "/sign-in"}
-          className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors"
+          className="font-medium text-foreground hover:underline transition-colors"
         >
-          {isSignIn ? "Đăng ký ngay" : "Đăng nhập"}
+          {isSignIn ? "Đăng ký" : "Đăng nhập"}
         </Link>
       </p>
     </div>

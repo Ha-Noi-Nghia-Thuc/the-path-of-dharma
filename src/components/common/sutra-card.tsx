@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import SutraCover from "./sutra-cover";
 
 interface SutraCardProps {
@@ -7,14 +6,21 @@ interface SutraCardProps {
   title: string;
   coverColor: string;
   coverUrl: string;
+  author?: string;
 }
 
-const SutraCard = ({ id, title, coverColor, coverUrl }: SutraCardProps) => {
+const SutraCard = ({
+  id,
+  title,
+  coverColor,
+  coverUrl,
+  author,
+}: SutraCardProps) => {
   return (
     <article className="group">
       <Link
         href={`/sutra/${id}`}
-        className="block focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg"
+        className="block focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-lg"
       >
         {/* Cover image */}
         <div className="mb-3">
@@ -22,15 +28,20 @@ const SutraCard = ({ id, title, coverColor, coverUrl }: SutraCardProps) => {
             coverColor={coverColor}
             coverUrl={coverUrl}
             alt={`Bìa kinh ${title}`}
-            className="transition-transform duration-200 group-hover:scale-105"
+            className="transition-transform duration-200 group-hover:scale-[1.02]"
           />
         </div>
 
         {/* Title and author */}
         <div className="space-y-1">
-          <h3 className="text-sm xs:text-base font-semibold leading-snug line-clamp-2 text-foreground group-hover:text-primary transition-colors">
+          <h3 className="text-sm font-medium leading-snug line-clamp-2 text-foreground group-hover:text-muted-foreground transition-colors">
             {title}
           </h3>
+          {author && (
+            <p className="text-xs text-muted-foreground line-clamp-1">
+              {author}
+            </p>
+          )}
         </div>
       </Link>
     </article>

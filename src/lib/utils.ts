@@ -21,92 +21,170 @@ export const generateEmailTemplate = (
   type: "welcome" | "remind7" | "remind30",
   { fullName }: { fullName: string }
 ): { subject: string; html: string } => {
-  // shared CSS styles embedded in every email
+  // Modern CSS styles matching your project's design system
   const baseStyles = `
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Allura&family=Merriweather:ital,opsz,wght@0,300..900;1,300..900&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
       
       .email-container {
-        font-family: 'Merriweather', Georgia, serif; /* Changed to Merriweather */
-        font-weight:400;
-        max-width: 560px;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        max-width: 600px;
         margin: 0 auto;
+        background: #ffffff;
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(139, 69, 19, 0.08);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e5e7eb;
+      }
+      
+      .header {
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        padding: 32px 40px;
+        text-align: center;
       }
       
       .logo {
-        color: #FFFFFF;
-        font-family: "Allura", cursive; /* Allura for logo */
-        font-size: 35px;
-        font-weight: 400;
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: 600;
         margin: 0;
+        letter-spacing: -0.025em;
+      }
+      
+      .subtitle {
+        color: #d1d5db;
+        font-size: 14px;
+        font-weight: 400;
+        margin-top: 8px;
       }
       
       .content {
         padding: 40px;
-        background: #FFFEF7;
+        background: #ffffff;
       }
       
       .greeting {
-        color: #5D4037;
-        font-size: 20px;
-        font-weight: 400;
+        color: #111827;
+        font-size: 24px;
+        font-weight: 600;
         margin: 0 0 24px 0;
-        line-height: 1.4;
+        line-height: 1.3;
+        letter-spacing: -0.025em;
       }
       
       .message {
-        color: #000000;
+        color: #374151;
         font-size: 16px;
-        line-height: 1.7;
+        line-height: 1.6;
         margin: 0 0 20px 0;
+        font-weight: 400;
+      }
+      
+      .message strong {
+        color: #111827;
+        font-weight: 600;
       }
       
       .cta-button {
         display: inline-block;
         margin: 32px 0;
-        padding: 16px 32px;
-        background: #A17D4D;
-        color: #FFFFFF !important;
+        padding: 12px 24px;
+        background: #111827;
+        color: #ffffff !important;
         text-decoration: none;
         border-radius: 8px;
         font-weight: 500;
-        font-size: 15px;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 16px rgba(139, 69, 19, 0.2);
+        font-size: 14px;
+        letter-spacing: 0.025em;
+        transition: all 0.2s ease;
+        border: 1px solid #111827;
       }
       
       .cta-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(139, 69, 19, 0.3);
+        background: #1f2937;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      
+      .quote {
+        background: #f9fafb;
+        border-left: 4px solid #6b7280;
+        padding: 20px 24px;
+        margin: 32px 0;
+        border-radius: 0 8px 8px 0;
+      }
+      
+      .quote-text {
+        color: #4b5563;
+        font-size: 15px;
+        line-height: 1.6;
+        font-style: italic;
+        margin: 0;
+      }
+      
+      .quote-author {
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 500;
+        margin-top: 12px;
+        text-align: right;
       }
       
       .footer {
-        padding: 24px 40px;
-        background: #F5F3F0;
-        border-top: 1px solid #E8E3DE;
+        padding: 32px 40px;
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
         text-align: center;
       }
       
       .footer-text {
-        color: #8D6E63;
-        font-size: 13px;
+        color: #6b7280;
+        font-size: 14px;
         line-height: 1.5;
         margin: 0;
       }
       
       .divider {
         height: 1px;
-        background: linear-gradient(90deg, transparent, #D7CCC8, transparent);
-        margin: 24px 0;
+        background: #e5e7eb;
+        margin: 32px 0;
+      }
+      
+      .highlight {
+        background: #fef3c7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #92400e;
+        font-weight: 500;
+      }
+      
+      @media (max-width: 640px) {
+        .email-container {
+          margin: 0 16px;
+        }
+        
+        .header, .content, .footer {
+          padding: 24px;
+        }
+        
+        .greeting {
+          font-size: 20px;
+        }
+        
+        .message {
+          font-size: 15px;
+        }
       }
     </style>
   `;
 
-  // email content based on type
+  // Email content based on type
   switch (type) {
     case "welcome":
       return {
@@ -114,12 +192,17 @@ export const generateEmailTemplate = (
         html: `
 ${baseStyles}
 <div class="email-container">
+  <div class="header">
+    <h1 class="logo">Chánh Đạo</h1>
+    <p class="subtitle">Thư viện Phật pháp trực tuyến</p>
+  </div>
+  
   <div class="content">
     <h2 class="greeting">Kính chào ${fullName},</h2>
     
     <p class="message">
       Chúng tôi hoan hỷ chào đón bạn đến với <strong>Chánh Đạo</strong> – thư viện Phật pháp trực tuyến,
-      nơi gìn giữ, lan toả và giúp tiếp cận kho tàng trí tuệ từ Tam Tạng Kinh Điển.
+      nơi gìn giữ, lan toả và giúp tiếp cận kho tàng trí tuệ từ <span class="highlight">Tam Tạng Kinh Điển</span>.
     </p>
     
     <p class="message">
@@ -127,16 +210,16 @@ ${baseStyles}
       hỗ trợ bạn trên con đường hướng về Chánh Pháp.
     </p>
     
-    <div class="divider"></div>
-    
     <a href="https://the-path-of-dharma.vercel.app/" class="cta-button">
-      Bắt đầu khám phá
+      Bắt đầu khám phá →
     </a>
     
-    <p class="message" style="margin-top: 32px; font-size: 14px; font-style: italic;">
-      “Không có con đường dẫn đến hạnh phúc, hạnh phúc chính là con đường.”<br />
-      – Đức Phật
-    </p>
+    <div class="quote">
+      <p class="quote-text">
+        "Không có con đường dẫn đến hạnh phúc, hạnh phúc chính là con đường."
+      </p>
+      <p class="quote-author">– Đức Phật</p>
+    </div>
   </div>
   
   <div class="footer">
@@ -154,6 +237,11 @@ ${baseStyles}
         html: `
 ${baseStyles}
 <div class="email-container">
+  <div class="header">
+    <h1 class="logo">Chánh Đạo</h1>
+    <p class="subtitle">Thư viện Phật pháp trực tuyến</p>
+  </div>
+  
   <div class="content">
     <h2 class="greeting">Kính gửi ${fullName},</h2>
     
@@ -162,19 +250,19 @@ ${baseStyles}
     </p>
     
     <p class="message">
-      Pháp học cần sự đều đặn. Mỗi ngày, dù chỉ một đoạn kinh, một câu kệ, cũng góp phần nuôi dưỡng chánh niệm và tuệ giác.
+      Pháp học cần sự đều đặn. Mỗi ngày, dù chỉ một đoạn kinh, một câu kệ, cũng góp phần nuôi dưỡng <span class="highlight">chánh niệm</span> và tuệ giác.
     </p>
-    
-    <div class="divider"></div>
     
     <a href="https://the-path-of-dharma.vercel.app/" class="cta-button">
-      Tiếp tục hành trình
+      Tiếp tục hành trình →
     </a>
     
-    <p class="message" style="margin-top: 32px; font-size: 14px; font-style: italic;">
-      “Giống như nước nhỏ giọt đều đặn có thể làm đầy bình, người trí cũng vậy, từng chút thiện hạnh sẽ làm đầy tâm.”<br />
-      – Kinh Pháp Cú, kệ 122
-    </p>
+    <div class="quote">
+      <p class="quote-text">
+        "Giống như nước nhỏ giọt đều đặn có thể làm đầy bình, người trí cũng vậy, từng chút thiện hạnh sẽ làm đầy tâm."
+      </p>
+      <p class="quote-author">– Kinh Pháp Cú, kệ 122</p>
+    </div>
   </div>
   
   <div class="footer">
@@ -192,6 +280,11 @@ ${baseStyles}
         html: `
 ${baseStyles}
 <div class="email-container">
+  <div class="header">
+    <h1 class="logo">Chánh Đạo</h1>
+    <p class="subtitle">Thư viện Phật pháp trực tuyến</p>
+  </div>
+  
   <div class="content">
     <h2 class="greeting">Kính gửi ${fullName},</h2>
     
@@ -200,19 +293,19 @@ ${baseStyles}
     </p>
     
     <p class="message">
-      Nhưng Chánh Pháp luôn ở đó, như ánh trăng soi sáng đêm tối – chỉ cần bạn dừng lại, là có thể thấy rõ.
+      Nhưng <span class="highlight">Chánh Pháp</span> luôn ở đó, như ánh trăng soi sáng đêm tối – chỉ cần bạn dừng lại, là có thể thấy rõ.
     </p>
-    
-    <div class="divider"></div>
     
     <a href="https://the-path-of-dharma.vercel.app/" class="cta-button">
-      Quay về nương tựa Pháp
+      Quay về nương tựa Pháp →
     </a>
     
-    <p class="message" style="margin-top: 32px; font-size: 14px; font-style: italic;">
-      “Hãy tự mình là ngọn đèn cho chính mình, hãy tự mình nương tựa chính mình, không nương tựa một ai khác.”<br />
-      – Đức Phật, Kinh Đại Bát Niết Bàn
-    </p>
+    <div class="quote">
+      <p class="quote-text">
+        "Hãy tự mình là ngọn đèn cho chính mình, hãy tự mình nương tựa chính mình, không nương tựa một ai khác."
+      </p>
+      <p class="quote-author">– Đức Phật, Kinh Đại Bát Niết Bàn</p>
+    </div>
   </div>
   
   <div class="footer">

@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { db } from "@/database/drizzle";
 import { users } from "@/database/schemas";
 import ratelimit from "@/ratelimit";
@@ -28,7 +28,7 @@ export const signUp = async (params: AuthCredentials) => {
     .limit(1);
 
   if (existingUser.length > 0) {
-    return { success: false, error: "User already exists" };
+    return { success: false, error: "Người dùng đã tồn tại" };
   }
 
   const hashedPassword = await hash(password, 10);
@@ -54,7 +54,7 @@ export const signUp = async (params: AuthCredentials) => {
     return { success: true };
   } catch (error) {
     console.error("Signup failed:", error);
-    return { success: false, error: "Signup error" };
+    return { success: false, error: "Đăng ký thất bại" };
   }
 };
 
@@ -78,12 +78,16 @@ export const signInWithCredentials = async (
     });
 
     if (result?.error) {
-      return { success: false, error: result.error };
+      return { success: false, error: "Email hoặc mật khẩu không đúng" };
     }
 
     return { success: true };
   } catch (error) {
     console.error("Signin failed:", error);
-    return { success: false, error: "Signin error" };
+    return { success: false, error: "Đăng nhập thất bại" };
   }
+};
+
+export const handleSignOut = async () => {
+  await signOut();
 };
