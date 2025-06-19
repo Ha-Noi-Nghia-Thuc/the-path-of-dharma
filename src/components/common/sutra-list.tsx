@@ -1,12 +1,5 @@
 import SutraCard from "./sutra-card";
 
-interface Sutra {
-  id: string;
-  title: string;
-  description: string;
-  // Add other properties as needed
-}
-
 interface SutraListProps {
   title: string;
   sutras: Sutra[];
@@ -14,6 +7,14 @@ interface SutraListProps {
 }
 
 const SutraList = ({ title, sutras, containerClassName }: SutraListProps) => {
+  if (sutras.length === 0) {
+    return (
+      <section className={containerClassName}>
+        <p className="text-muted-foreground">Hiện chưa có kinh điển nào.</p>
+      </section>
+    );
+  }
+
   return (
     <section className={containerClassName}>
       <div className="mb-8">

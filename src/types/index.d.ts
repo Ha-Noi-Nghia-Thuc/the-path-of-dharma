@@ -50,21 +50,6 @@ interface SutraParams {
   tags?: string[];
 }
 
-// legacy sutra type for backward compatibility
-interface LegacySutra {
-  id: string | number;
-  title: string;
-  author: string;
-  rating: number;
-  description: string;
-  color: string;
-  cover: string;
-  pdf?: string;
-  link?: string;
-  video: string;
-  summary: string;
-}
-
 // category types
 interface Category {
   id: string;

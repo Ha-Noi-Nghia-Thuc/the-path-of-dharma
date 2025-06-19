@@ -20,7 +20,7 @@ interface SutraCoverProps {
   variant?: SutraCoverVariant;
   className?: string;
   coverColor: string;
-  coverImage: string;
+  coverUrl: string;
   alt?: string;
   priority?: boolean;
 }
@@ -33,7 +33,7 @@ const SutraCover = ({
   variant = "regular",
   className,
   coverColor = "#C9A66B",
-  coverImage,
+  coverUrl,
   alt = "Bìa kinh điển",
   priority = false,
 }: SutraCoverProps) => {
@@ -103,9 +103,9 @@ const SutraCover = ({
         {/* Main cover image */}
         <Image
           src={
-            coverImage?.startsWith("/")
-              ? `${config.env.imagekit.urlEndpoint}${coverImage}`
-              : coverImage || "/placeholder.svg"
+            coverUrl?.startsWith("/")
+              ? `${config.env.imagekit.urlEndpoint}${coverUrl}`
+              : coverUrl || "/placeholder.svg"
           }
           alt={alt}
           fill

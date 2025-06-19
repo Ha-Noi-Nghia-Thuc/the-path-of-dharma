@@ -20,7 +20,7 @@ const SutraCard = ({
     <article className="group">
       <Link
         href={`/sutra/${id}`}
-        className="block focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-lg"
+        className="block focus:outline-none rounded-lg"
       >
         {/* Cover image */}
         <div className="mb-3">

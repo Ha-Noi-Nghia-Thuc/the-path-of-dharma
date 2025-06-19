@@ -1,6 +1,9 @@
 import { auth } from "@/auth";
 import Header from "@/components/admin/header";
 import Sidebar from "@/components/admin/sidebar";
+import { db } from "@/database/drizzle";
+import { users } from "@/database/schemas";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
@@ -12,10 +15,16 @@ const Layout = async ({ children }: { children: ReactNode }) => {
     redirect("/sign-in");
   }
 
-  // TODO: Add role-based access control
-  // if (session.user.role !== 'ADMIN') {
-  //   redirect('/unauthorized');
-  // }
+  const isAdmin = await db
+    .select({ isAdmin: users.role })
+    .from(users)
+    .where(eq(users.id, session.user.id))
+    .limit(1)
+    .then((res) => res[0]?.isAdmin === "ADMIN");
+
+  if (!isAdmin) {
+    redirect("/");
+  }
 
   return (
     <main className="flex">

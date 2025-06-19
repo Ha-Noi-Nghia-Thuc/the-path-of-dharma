@@ -1,6 +1,9 @@
+import { auth } from "@/auth";
 import SutraList from "@/components/common/sutra-list";
 import SutraOverview from "@/components/common/sutra-overview";
-import { sampleSutras } from "@/constants";
+import { db } from "@/database/drizzle";
+import { sutras } from "@/database/schemas";
+import { desc } from "drizzle-orm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -15,6 +18,14 @@ export const metadata: Metadata = {
 };
 
 const Home = async () => {
+  const session = await auth();
+
+  const lastestSutras = (await db
+    .select()
+    .from(sutras)
+    .limit(10)
+    .orderBy(desc(sutras.totalView))) as Sutra[];
+
   return (
     <div className="space-y-16">
       {/* Hero Section */}
@@ -32,10 +43,13 @@ const Home = async () => {
       </section>
 
       {/* Featured sutra section */}
-      <SutraOverview {...sampleSutras[0]} />
+      <SutraOverview
+        {...lastestSutras[0]}
+        userId={session?.user?.id as string}
+      />
 
       {/* Latest sutras section */}
-      <SutraList title="Kinh điển nổi bật" sutras={sampleSutras.slice(1)} />
+      <SutraList title="Kinh điển phổ biến" sutras={lastestSutras.slice(1)} />
     </div>
   );
 };

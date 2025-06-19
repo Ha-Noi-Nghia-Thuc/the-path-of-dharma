@@ -3,6 +3,7 @@ import { BookOpenIcon, EyeIcon } from "lucide-react";
 import SutraCover from "./sutra-cover";
 
 interface Sutra {
+  userId?: string;
   title: string;
   author: string;
   scripture: string;
@@ -10,8 +11,8 @@ interface Sutra {
   totalView?: number;
   coverColor: string;
   coverUrl: string;
-  pdfUrl?: string;
-  linkUrl?: string;
+  pdfUrl?: string | null;
+  linkUrl?: string | null;
   tags?: string[];
 }
 
